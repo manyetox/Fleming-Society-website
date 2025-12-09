@@ -1,0 +1,75 @@
+/*  
+   ---------------------------------------------------------
+   ULTRASONIC DISTANCE MEASUREMENT (BEGINNER-FRIENDLY VERSION)
+   ---------------------------------------------------------
+   This program reads distance using the HC-SR04 ultrasonic
+   sensor and shows the result in the Serial Monitor.
+
+   The sensor works by sending out sound waves that bounce
+   back when they hit an object. The Arduino measures how
+   long the waves take to return, and from that we calculate
+   the distance.
+
+   Everything happens automatically once the program runs.
+*/
+
+// ------------------ 1. PIN CONNECTIONS -------------------
+// These two lines tell the Arduino which pins the sensor uses.
+// Change the numbers if your wiring is different.
+const int trigPin = 7;   // 'trig' pin on the sensor goes to pin 7
+const int echoPin = 6;   // 'echo' pin on the sensor goes to pin 6
+
+// These variables will be used later to calculate distance.
+long duration;       // how long sound takes to return (in microseconds)
+float distance_cm;   // the final distance result (in centimeters)
+
+
+
+// --------------------- 2. SETUP ---------------------------
+// This part runs only once when the Arduino starts.
+void setup() {
+
+  // Opens the Serial Monitor so text can be shown on the screen
+  Serial.begin(9600);
+
+  // We tell the Arduino what kind of signals the pins will use
+  pinMode(trigPin, OUTPUT);  // Arduino sends a signal out of this pin
+  pinMode(echoPin, INPUT);   // Arduino listens for signal on this pin
+
+  // A friendly message so the user knows the program is running
+  Serial.println("Ultrasonic Sensor Started!");
+  Serial.println("Distance will appear below:");
+  Serial.println("---------------------------------");
+}
+
+
+
+// ---------------------- 3. MAIN LOOP ----------------------
+// This part repeats forever while the Arduino is powered.
+void loop() {
+
+  // Before measuring, we make sure the trigger pin is LOW (off)
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);   // short pause (2 microseconds)
+
+  // Send a short 10-microsecond pulse → this triggers the sensor
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // The sensor now waits for the sound to return.
+  // pulseIn() measures how long that takes.
+  duration = pulseIn(echoPin, HIGH);
+
+  // Convert time into distance.
+  // The number 0.034 represents the speed of sound in cm per microsecond.
+  // We divide by 2 because the sound travels to the object and back.
+  distance_cm = duration * 0.034 / 2;
+
+  // Print the final result to the Serial Monitor
+  Serial.print("Distance: ");
+  Serial.print(distance_cm);
+  Serial.println(" cm");  // "cm" means centimeters
+
+  delay(200); // wait 200 milliseconds (0.2 seconds) before the next reading
+}
