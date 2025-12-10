@@ -1,6 +1,6 @@
 // Ultrasonic sensor pins
-const int trigPin = 7;
-const int echoPin = 6;
+const int trigPin = 10;
+const int echoPin = 11;
 
 // LED pins
 const int redLED    = 10;
